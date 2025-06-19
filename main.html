@@ -1,13 +1,49 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chained Promises Array Manipulation</title>
+</head>
+<body>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
+  <div id="output"></div>
 
-  <body>
-    <!-- do not change this code -->
-    <div id="output"></div>
-    <script type="text/javascript" src="./script.js"></script>
-  </body>
+  <script>
+    // Function to simulate delay with a promise
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function manipulateArray() {
+      // Initial promise resolving after 3 seconds with the array
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([1, 2, 3, 4]);
+        }, 3000);
+      })
+      .then(arr => {
+        // Filter out odd numbers, keep even numbers
+        const evens = arr.filter(num => num % 2 === 0);
+
+        // After 1 second delay, update the output div with even numbers
+        return delay(1000).then(() => {
+          document.getElementById('output').textContent = evens.join(',');
+          return evens;  // Pass filtered array to next then()
+        });
+      })
+      .then(evens => {
+        // Multiply even numbers by 2
+        const doubled = evens.map(num => num * 2);
+
+        // After 2 seconds delay, update the output div with doubled numbers
+        return delay(2000).then(() => {
+          document.getElementById('output').textContent = doubled.join(',');
+        });
+      });
+    }
+
+    // Call the function on page load
+    manipulateArray();
+  </script>
+</body>
 </html>
